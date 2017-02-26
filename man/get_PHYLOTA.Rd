@@ -4,7 +4,7 @@
 \title{Download PHYLOTA clusters
 %%  ~~function to do ... ~~
 }
-\description{A function fo retrieving PHYLOTA clusters for a given clade. Make sure that there are
+\description{A function for retrieving PHYLOTA clusters for a given clade. Make sure that there are
 informative clusters in the website. Otherwise it will not work. This function (1) creates a new folder in
 your working directory, and (2) exports each cluster in fasta format.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
