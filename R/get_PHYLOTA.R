@@ -1,9 +1,9 @@
-get_PHYLOTA<-function(clade, MSA, ALI){
+get_PHYLOTA<-function(clade, MSA = TRUE, ALI =TRUE){
 
   list.of.packages <- c("ips")
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
-
+  require(ips)
   cat("Starting...")
 
   ##GetWD
