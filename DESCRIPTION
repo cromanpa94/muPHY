@@ -1,0 +1,20 @@
+Package: muPhy
+Type: Package
+Title: Multiple utilities for performing Phylogenetic analyses
+Version: 0.1.0
+Author: Cristian Roman-Palacios
+Maintainer: Cristian Roman-Palacios <cromanpa94@email.arizona.edu>
+Description: Multiple utilities.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: taxize,
+  pbapply,
+  seqRFLP,
+  RCurl,
+  XML,
+  ape, 
+  stringr,
+  phangorn,
+  msa,
+  Biostrings
