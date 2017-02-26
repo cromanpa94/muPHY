@@ -10,7 +10,7 @@ your working directory, and (2) exports each cluster in fasta format.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-get_PHYLOTA(clade,MSA=TRUE)
+get_PHYLOTA(clade,MSA=TRUE, ALI=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -47,5 +47,5 @@ Sanderson, M. J., Boss, D., Chen, D., Cranston, K. A., & Wehe, A. (2008). The Ph
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-get_PHYLOTA("Trochillidae", MSA=TRUE, ALI=TRUE)
+get_PHYLOTA("Trochilidae", MSA=TRUE, ALI=TRUE)
 }
