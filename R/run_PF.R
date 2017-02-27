@@ -4,6 +4,7 @@ run_PF<-function(folder = "WD"){
   subDir<-if(folder != "WD") {paste0(mainDir(), "/Aliscore")}
   else{paste0(getwd(), "/Aligned") }
 
+  setwd(subDir)
   evobiR::SuperMatrix()
   concatenated<-read.FASTA("concatenated.fasta")
 
