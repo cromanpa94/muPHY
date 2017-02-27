@@ -19,7 +19,7 @@ run_PF<-function(folder = "ALI"){
   setwd(mainDir)
   if( "PartitionFinder.tar.gz" %in% list.files() == FALSE){
   download.file("https://github.com/brettc/partitionfinder/archive/v1.1.1.zip",'PartitionFinder.tar.gz')
-  untar("PartitionFinder.tar.gz")} else
+  untar("PartitionFinder.tar.gz")} else {}
 
 partitions<-read.csv(paste0(subDir,"/concatenated.partitions.csv"))
 config_file<-readLines("partitionfinder-1.1.1/examples/nucleotide/partition_finder.cfg")
