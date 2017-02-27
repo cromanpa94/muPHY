@@ -2,7 +2,7 @@
 run_PF<-function(folder = "WD"){
   mainDir<-getwd()
   subDir<-if(folder != "WD") {paste0(mainDir(), "/Aliscore")}
-  else{paste0(getwd(), "/Aligned") }
+  else {paste0(getwd(), "/Aligned") }
 
   setwd(subDir)
   evobiR::SuperMatrix()
@@ -15,7 +15,7 @@ run_PF<-function(folder = "WD"){
   download.file("https://github.com/brettc/partitionfinder/archive/v1.1.1.zip",'PartitionFinder.tar.gz')
   untar("PartitionFinder.tar.gz")
 
-partitions<-read.csv(paste0(subDir,"concatenated.partitions.csv"))
+partitions<-read.csv(paste0(subDir,"/concatenated.partitions.csv"))
 config_file<-readLines("partitionfinder-1.1.1/examples/nucleotide/partition_finder.cfg")
 
 block<-list()
