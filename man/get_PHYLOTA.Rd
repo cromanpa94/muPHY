@@ -14,7 +14,7 @@ get_PHYLOTA(clade,MSA=TRUE, ALI=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{clade}{Character: A given lineage (e.g. "Trochidae")}
+  \item{clade}{Character: A given lineage (e.g. "Sphyraena")}
   \item{MSA}{Logical: Perform a MSA on the clusters (only ClustalOmega)}
   \item{ALI}{Logical: Use Aliscore on the MSA}
 %%     ~~Describe \code{x} here~~
@@ -47,5 +47,5 @@ Sanderson, M. J., Boss, D., Chen, D., Cranston, K. A., & Wehe, A. (2008). The Ph
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-get_PHYLOTA("Trochilidae", MSA=TRUE, ALI=TRUE)
+get_PHYLOTA("Sphyraena", MSA=TRUE, ALI=TRUE)
 }
