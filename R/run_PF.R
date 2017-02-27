@@ -1,5 +1,5 @@
 
-run_PF<-function(folder){
+run_PF<-function(folder = NULL){
   mainDir<-getwd()
   subDir<-if(folder == NULL) {paste0(mainDir(), "/Aliscore")}
   else{paste0(getwd(), "/Aligned") }
