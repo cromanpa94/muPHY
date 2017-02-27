@@ -39,4 +39,6 @@ write.dna(concatenated, file = "concatenated.phy", format = "sequential",nbcol=-
 setwd(mainDir)
 tofile<-paste0(getwd(), "/PartitionFinder_Analyses/partition_finder.cfg")
 system(paste0("python ./partitionfinder-1.1.1/PartitionFinder.py"," ", tofile), wait=F)
+cat("You can use R while PartitionFinder is running!
+\n Results are written to PartitionFinder_Analyses folder")
 }
