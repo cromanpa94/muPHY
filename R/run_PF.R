@@ -1,16 +1,13 @@
 
 run_PF<-function(folder = "ALI"){
-  mainDir<-getwd()
-  subDir<-if(folder == "ALI") {
-            paste0(mainDir, "/Aliscore")
-                              }
-        else {
-          if(folder == "alig") {
-            paste0(mainDir, "/Aligned")} else
-            {
-              paste0(mainDir, folder)
-            }
-          }
+  mainDir <- getwd()
+  subDir <- if (folder == "ALI") {
+    paste0(mainDir, "/Aliscore")
+  }  else if (folder == "alig") {
+    paste0(mainDir, "/Aligned")
+  } else {
+    paste0(mainDir, folder)
+  }
 
   setwd(subDir)
   evobiR::SuperMatrix()
