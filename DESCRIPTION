@@ -17,4 +17,5 @@ Depends: taxize,
   stringr,
   phangorn,
   msa,
-  Biostrings
+  Biostrings,
+  evobiR
