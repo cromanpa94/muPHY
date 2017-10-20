@@ -167,7 +167,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
       setwd(file.path(mainDir, "unaligned"))
 
-      temp = list.files(pattern="*.fasta")
+      temp = files
 
       ##Chose method: "Muscle", "ClustalOmega", "ClustalW"
 
