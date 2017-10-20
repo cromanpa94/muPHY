@@ -188,12 +188,11 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       options(warn=-1)
       dir.create(file.path(mainDir, "Aligned"))
       options(warn=-0)
-
+      setwd(file.path(mainDir, "Aligned"))
       for (i in 1: length(alignments)){
         write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
       }
       cat("\nAligned and unaligned sequences are in separated folders within your working directory \n")
-      setwd(file.path(mainDir, "Aligned"))
       setwd(mainDirect)
     } else {}
 
@@ -204,5 +203,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
         }
   return(df)
   setwd(mainDirect)
+  if (file.exists("sequence.fasta")) unlink("sequence.fasta")
+  if (file.exists("test.txt")) unlink("test.txt")
 
 }
