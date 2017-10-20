@@ -55,6 +55,8 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
         gene_fin[[i]] <-gsub("[[:space:]]", "", b)[1]
         cat("New gene symbol found!", gsub("[[:space:]]", "", b)[1])
         print(i)
+       return(levels(factor(unlist(gene_fin))))
+
       }
 
       closebank()
@@ -65,7 +67,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
 
 
-      levels(factor(unlist(gene_fin)))
 
     ##Then run each sequence against each cluster
     #some functions
