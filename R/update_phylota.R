@@ -4,7 +4,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   fn <- "Unaligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
 
-  cat("Get PhyLota clusters")
+  cat("Get PhyLota clusters \n")
 
   get_PHYLOTA(lineage,MSA=F, ALI=F)
   mainDirect<-getwd()
@@ -13,18 +13,18 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
   ##Check for new species in genbank
 
-  cat("Check novel species in genbank")
+  cat("Check novel species in genbank \n")
 
   spp_genbank<-downstream(lineage, db = database, downto = 'species')[[1]]
   spp_sampled <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv))
   spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
 
-  if(length(new_spp) ==0){ cat("Nothing to add...sorry")
+  if(length(new_spp) ==0){ cat("Nothing to add...sorry \n")
     if (file.exists(fn)) unlink(fn,recursive =T)
         }else{
 
-    cat("Tranform each cluster into a Blast DB")
+    cat("Tranform each cluster into a Blast DB \n")
 
     ##First make DB for each cluster
     files<-list.files(path = subwd, pattern = c( "Cluster"))
@@ -40,7 +40,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
 
 
-    cat(length(new_spp)," species can be added to the ", dim(spp_sampled)[1], "sampled in PhyloTa")
+    cat(length(new_spp)," species can be added to the ", dim(spp_sampled)[1], "sampled in PhyloTa \n")
 
     ##Check which genes do I have in PhyloTa clusters. This is based on 5 species per each cluster.
 
@@ -48,7 +48,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     sampled_genes<-ncbi_byid(gsub("gi","",as.vector(sample_Gi$gi)))
 
     sampled_gene_names<- if(is.null(genes) == T){
-      cat("Lets look for the genes that were sampled in PhyLota")
+      cat("Lets look for the genes that were sampled in PhyLota \n")
       choosebank("genbank")
       gene_fin<-list()
       for(i in 1:length(sampled_genes$acc_no)){
@@ -57,7 +57,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
         a<-gsub("/gene=\"","", grep("/gene=",annots, value = T))
         b<-gsub("\"","",a)
         gene_fin[[i]] <-gsub("[[:space:]]", "", b)[1]
-        cat("New gene symbol found!", gsub("[[:space:]]", "", b)[1])
+        cat("New gene symbol found!", gsub("[[:space:]]", "", b)[1], "\n")
         print(i)
        return(levels(factor(unlist(gene_fin))))
 
@@ -65,7 +65,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
       closebank()
 
-      cat("Your sampling includes", levels(factor(unlist(gene_fin))), "loci")
+      cat("\n Your sampling includes", levels(factor(unlist(gene_fin))), "loci \n")
     }else{genes}
 
 
@@ -121,7 +121,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
     ###Now, I download each sequence and test where it fits better
 
-    cat("Fitting the new sequences into the existing clusters")
+    cat("\nFitting the new sequences into the existing clusters \n")
 
     acce_new<-as.character(na.omit(unlist(data[,-1])))
 
@@ -192,7 +192,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       for (i in 1: length(alignments)){
         write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
       }
-      cat("\nAligned and unaligned sequences are in separated folders within your working directory")
+      cat("\nAligned and unaligned sequences are in separated folders within your working directory \n")
 
       if (ALI==TRUE){
         ####For Aliscore------
@@ -213,7 +213,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
           aln_aliscored[[i]]<-aliscore(alignments[[i]], gaps = "ambiguous", w = 3, path = paste0(mainDir, "/Aliscore_v.2.0"))
           write.dna(aln_aliscored[[i]], paste0(clade, "_", "AliScore", "_Alignment","_Cluster_" ,i, ".fasta"), format="fasta")
           plot.progress(i/length(alignments))
-          cat("\nCurated alignments are under ALISCORE folder")
+          cat("\nCurated alignments are under ALISCORE folder \n")
 
         }
 
@@ -221,7 +221,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
     } else {}
 
-    cat("\nDone!! \\Check your WD")
+    cat("\nDone!! \\Check your WD \n")
 
 
         }
