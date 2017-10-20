@@ -226,5 +226,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
         }
   return(df)
+  setwd(mainDir)
 
 }
