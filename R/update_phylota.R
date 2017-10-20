@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5, database="ncbi", MSA = FALSE, ALI =FALSE){
+update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, ALI =FALSE){
   fn <- "Unaligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
 
@@ -43,26 +43,29 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", MSA = FALSE, ALI 
     sample_Gi <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv, nrow=nsamples))
     sampled_genes<-ncbi_byid(gsub("gi","",as.vector(sample_Gi$gi)))
 
-    cat("Lets look for the genes that were sampled in PhyLota")
+    sampled_gene_names<- if(is.null(genes) == T){
+      cat("Lets look for the genes that were sampled in PhyLota")
+      choosebank("genbank")
+      gene_fin<-list()
+      for(i in 1:length(sampled_genes$acc_no)){
+        Dengue1<-query("Dengue1", paste0("AC=",gsub("\\..*","",sampled_genes$acc_no[i])))
+        annots <- getAnnot(Dengue1$req[[1]])
+        a<-gsub("/gene=\"","", grep("/gene=",annots, value = T))
+        b<-gsub("\"","",a)
+        gene_fin[[i]] <-gsub("[[:space:]]", "", b)[1]
+        cat("New gene symbol found!", gsub("[[:space:]]", "", b)[1])
+        print(i)
+      }
+
+      closebank()
+
+      cat("Your sampling includes", levels(factor(unlist(gene_fin))), "loci")
+    }else{genes}
 
 
-    choosebank("genbank")
-    gene_fin<-list()
-    for(i in 1:length(sampled_genes$acc_no)){
-      Dengue1<-query("Dengue1", paste0("AC=",gsub("\\..*","",sampled_genes$acc_no[i])))
-      annots <- getAnnot(Dengue1$req[[1]])
-      a<-gsub("/gene=\"","", grep("/gene=",annots, value = T))
-      b<-gsub("\"","",a)
-      gene_fin[[i]] <-gsub("[[:space:]]", "", b)[1]
-      cat("New gene symbol found!", gsub("[[:space:]]", "", b)[1])
-      print(i)
-    }
 
-    closebank()
 
-    cat("Your sampling includes", levels(factor(unlist(gene_fin))), "loci")
-
-    sampled_gene_names<- levels(factor(unlist(gene_fin)))
+      levels(factor(unlist(gene_fin)))
 
     ##Then run each sequence against each cluster
     #some functions
