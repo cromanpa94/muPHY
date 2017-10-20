@@ -157,6 +157,10 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
     ##Do MSA--------
     ##Read fasta files
+
+    mainDir <- getwd()
+    setwd(mainDir)
+
     if(MSA==TRUE){
 
       cat("\nalignment in process. Please be patient\n")
