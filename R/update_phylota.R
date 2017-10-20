@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, ALI =FALSE){
+update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE){
   Clade<-lineage
   clade<-lineage
   fn <- "Unaligned"
@@ -194,34 +194,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
         write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
       }
       cat("\nAligned and unaligned sequences are in separated folders within your working directory \n")
-
-      if (ALI==TRUE){
-        ####For Aliscore------
-    setwd(mainDir)
-
-        if( "Aliscore_v.2.0" %in% list.files() == FALSE){
-          download.file("http://www.zfmk.de/bioinformatics/Aliscore_v.2.0.zip",'Aliscore_v.2.0.zip')
-          unzip("Aliscore_v.2.0.zip")
-        } else
-          options(warn=-1)
-        dir.create(file.path(mainDir, "Aliscore"))
-        options(warn=0)
-
-        setwd(file.path(mainDir, "Aliscore"))
-
-        aln_aliscored<-list()
-        for (i in 1: length(alignments)){
-          aln_aliscored[[i]]<-aliscore(alignments[[i]], gaps = "ambiguous", w = 3, path = paste0(mainDir, "/Aliscore_v.2.0"))
-          write.dna(aln_aliscored[[i]], paste0(clade, "_", "AliScore", "_Alignment","_Cluster_" ,i, ".fasta"), format="fasta")
-          plot.progress(i/length(alignments))
-          cat("\nCurated alignments are under ALISCORE folder \n")
-
-          setwd(mainDirect)
-
-
-        }
-
-      } else {}
 
     } else {}
 
