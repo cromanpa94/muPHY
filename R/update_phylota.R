@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples){
+update_phylota<-function(lineage, nsamples=5){
   fn <- "Unaligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
 
