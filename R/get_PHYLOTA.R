@@ -1,150 +1,175 @@
-update_phylota<-function(lineage, nsamples){
-  fn <- "Unaligned"
-  if (file.exists(fn)) unlink(fn,recursive =T)
+get_PHYLOTA<-function(clade, MSA = TRUE, ALI =TRUE){
 
-  cat("Get PhyLota clusters")
+  list.of.packages <- c("ips")
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  require(ips)
+  cat("Starting...")
 
-  get_PHYLOTA(lineage,MSA=F, ALI=F)
+  ##GetWD
+  mainDir <- getwd()
+  setwd(mainDir)
+  ti<-get_uid(sciname = clade)[1]
 
-  cat("Tranform each cluster into a Blast DB")
+  ##Get Main website
+  url <- paste0("http://phylota.net/cgi-bin/sql_getclusterset.cgi?ti=",ti, "&ntype=1&piflag=1&dflag=0&db=194")
+  doc <- htmlParse(url)
+  links <- xpathSApply(doc, "//a/@href")
+  clusters<-grep("getcluster",links, value=T )
 
-  ##First make DB for each cluster
-  subwd<-paste0(getwd(), "/Unaligned/")
-  files<-list.files(path = subwd, pattern = c( "Cluster"))
-  files<-Filter(function(x) grepl("\\.fasta$", x), files)
 
+  ##Sub-websites containing the different sequences
 
-  for(i in 1:length(files)){
-    args<-paste0("-in ", subwd, files[i], " -input_type fasta -dbtype nucl")
-    system2(command = 'makeblastdb', args = args, wait=FALSE,stdout = TRUE)
-    Sys.sleep(1)
-    print(i)
+  getwebsites<- function( websites ){
+    url_2 <- websites
+    doc_2 <- htmlParse(url_2)
+    links_2 <- xpathSApply(doc_2, "//a/@href")
+    todo<-grep("getalign",links_2, value=T )
+    matches <- regmatches(todo, gregexpr("[[:digit:]]+", todo))
+    num<-as.numeric(unlist(matches))
+    newweb<-paste0("http://phylota.net/cgi-bin/sql_getcluster_fasta.cgi?format=gi&db=194&ti=",num[1], "&cl=",num[2],"&ntype=1" )
   }
 
+  cat("Retrieving clusters")
+  seqs<-pblapply(clusters,getwebsites)
 
-  ##Check for new species in genbank
+  ##Get sequences per cluster
 
-  cat("Check novel species in genbank")
+  ReadFasta<-function(file) {
+    options(warn=-1)
+    fasta<-readLines(file)
+    options(warn=0)
+    fasta[1]<-gsub("<html><pre>", "", fasta[1])
+    fasan<-fasta
+    fasan_2<-fasan[-length(fasta)[1]]
+    # Identify header lines
+    ind<-grep(">", fasan_2)
+    # Identify the sequence lines
+    s<-data.frame(ind=ind, from=ind+1, to=c((ind-1)[-1], length(fasan_2)))
+    # Process sequence lines
+    seqs<-rep(NA, length(ind))
+    for(i in 1:length(ind)) {
+      seqs[i]<-paste(fasan_2[s$from[i]:s$to[i]], collapse="")
+    }
+    # Create a data frame
+    DF<-data.frame(name=gsub(">", "", fasan_2[ind]), sequence=seqs)
+    # Return the data frame as a result object from the function
+    return(DF)
+  }
+  options(warn=-1)
+  dir.create(file.path(mainDir, "Unaligned"))
+  options(warn=-0)
 
-  spp_genbank<-downstream(lineage, db = 'ncbi', downto = 'species')[[1]]
-  spp_sampled <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv))
-  spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
-  new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
+  setwd(file.path(mainDir, "Unaligned"))
 
-  cat(length(new_spp)," species can be added to the ", length(spp_sampled), "sampled in PhyloTa")
-
-  ##Check which genes do I have in PhyloTa clusters. This is based on 5 species per each cluster.
-
-  sample_Gi <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv, nrow=nsamples))
-  sampled_genes<-ncbi_byid(gsub("gi","",as.vector(sample_Gi$gi)))
-
-  cat("Lets look for the genes that were sampled in PhyLota")
-
-
-  choosebank("genbank")
-  gene_fin<-list()
-  for(i in 1:length(sampled_genes$acc_no)){
-    Dengue1<-query("Dengue1", paste0("AC=",gsub("\\..*","",sampled_genes$acc_no[i])))
-    annots <- getAnnot(Dengue1$req[[1]])
-    a<-gsub("/gene=\"","", grep("/gene=",annots, value = T))
-    b<-gsub("\"","",a)
-    gene_fin[[i]] <-gsub("[[:space:]]", "", b)[1]
-    cat("New gene symbol found!", gsub("[[:space:]]", "", b)[1])
-    print(i)
+  plot.progress <- function(...)	{
+    vectOfBar <- c(...)*100
+    numOfBar <- length(vectOfBar)
+    plot(c(0,100), c(0,numOfBar), type='n', xlab='', ylab='', yaxt='n', mar=c(3,3,3,3))
+    for(i in 1:numOfBar) {
+      rect(0, 0.1+i-1, vectOfBar[i], 0.9+i-1, col=rainbow(numOfBar)[i])
+      text(0.5, 0.5+i-1, paste('Running!!) ', i, ': ', round(vectOfBar[i],2), '%', sep=''), adj=0)
+    }
+    title('Progress...')
   }
 
-  closebank()
+  cat("Downloading clusters. Look at your working directory")
 
-  cat("Your sampling includes", levels(factor(unlist(gene_fin))), "loci")
 
-  sampled_gene_names<- levels(factor(unlist(gene_fin)))
+  for (i in 1:length(seqs)){  #
+    sequences<-ReadFasta(gsub("format=gi","format=all",seqs[i]$href))
+    sequences$gi<- word(sequences$name, 1, 1, fixed("_"))
+    sequences$name<- gsub(" ", "_" ,word(sequences$name, 3, 3, fixed("_")))
 
-  ##Then run each sequence against each cluster
-  #some functions
-  grab.results <- function (term) {
-    # Search for the given term on nuccore. This gives us a list of
-    # record IDs.
-    ids <- esearch(term, db="nuccore")
+    summary_unique_sequences<-sequences[!duplicated(sequences$name), ]
+    summary_non_sp<-summary_unique_sequences[- grep("sp.", summary_unique_sequences$name) , ]
 
-    # Grab summaries for the given record IDs, as a sort-of data frame.
-    sum <- esummary(ids, db="nuccore")
-    data <- content(sum, as="parsed")
+    if(length(grep("sp.", summary_unique_sequences$name))== 0) {
+      seqRFLP::write.fasta(dataframe2fas(summary_unique_sequences[c("name","sequence")]), file=paste0(clade, "_","Cluster" ,i, ".fasta"))
+      write.csv(summary_unique_sequences[c("name","gi")],
+                file=paste0(clade, "_","Cluster" ,i, ".csv") )
 
-    # For some reason, this parser gives us lists of lists instead of a
-    # proper data frame (which should be lists of vectors). Return a
-    # fixed-up version.
-    data.frame(lapply(data, as.character), stringsAsFactors=FALSE)
+    } else{
+      seqRFLP::write.fasta(dataframe2fas(summary_non_sp[c("name","sequence")]), file=paste0(clade, "_","Cluster" ,i, ".fasta"))
+      write.csv(summary_non_sp[c("name","gi")],
+                file=paste0(clade, "_","Cluster" ,i, ".csv"))
+    }
+    summary_non_sp<-NULL
+    summary_unique_sequences<-NULL
+    plot.progress(i/length(seqs))
+
   }
-  first.of.type <- function (results, type) {
-    # Filter rows whose title contains the given text
-    filtered <- results[grepl(type, results$Title, fixed=TRUE),]
 
-    # Return the first accession number
-    filtered$OSLT[1]
-  }
-  scrape.genbank <- function (species, genes) {
-    # Create dataset skeleton
-    data <- data.frame(Species=species)
-    for (i in genes) {
-      data[,i] <- rep(NA, length(species))
+  cat("\nDone!!")
+  setwd(mainDir)
+
+
+
+  ##Make sampling matrix------
+  #library(plyr)
+  #sampling_matrix<- join_all(for_Sup[c(23:24)], "species", match="first")
+
+  ##Do MSA--------
+  ##Read fasta files
+  if(MSA==TRUE){
+
+    cat("\nalignment in process. Please be patient\n")
+
+    setwd(file.path(mainDir, "unaligned"))
+
+    temp = list.files(pattern="*.fasta")
+
+    ##Chose method: "Muscle", "ClustalOmega", "ClustalW"
+
+    align_PHYLOTA<-function(file.names){
+      mySequences <- readDNAStringSet(file.names)
+      myFirstAlignment <- msa(mySequences, "ClustalOmega")
+      aln <- as.DNAbin(msaConvert(myFirstAlignment, type="phangorn::phyDat"))
     }
 
-    # Look up data for each species
-    for (i in 1:length(species)) {
-      n <- species[i]
-      print(sprintf("Looking up %s (%d/%d)...", n, i, length(species)))
-      tryCatch({
-        r <- grab.results(paste(n, "[Primary Organism]"))
-        for (g in genes) {
-          data[i,g] <- first.of.type(r, g)
-        }
-      }, error = function(e) { })
+    alignments<-pblapply(temp,align_PHYLOTA)
+
+    options(warn=-1)
+    dir.create(file.path(mainDir, "Aligned"))
+    options(warn=-0)
+
+    setwd(file.path(mainDir, "Aligned"))
+
+    for (i in 1: length(alignments)){
+      write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
     }
+    cat("\nAligned and unaligned sequences are in separated folders within your working directory")
 
-    data
-  }
-  ##Start!
-  data <- scrape.genbank(gsub("_", " ",new_spp), sampled_gene_names)
+    if (ALI==TRUE){
+      ####For Aliscore------
 
-  ###Now, I download each sequence and test where it fits better
+      setwd(mainDir)
 
-  cat("Fitting the new sequences into the existing clusters")
+      if( "Aliscore_v.2.0" %in% list.files() == FALSE){
+      download.file("http://www.zfmk.de/bioinformatics/Aliscore_v.2.0.zip",'Aliscore_v.2.0.zip')
+      unzip("Aliscore_v.2.0.zip")
+      } else
+      options(warn=-1)
+      dir.create(file.path(mainDir, "Aliscore"))
+      options(warn=0)
 
-  acce_new<-as.character(na.omit(unlist(data[,-1])))
+      setwd(file.path(mainDir, "Aliscore"))
 
+      aln_aliscored<-list()
+      for (i in 1: length(alignments)){
+        aln_aliscored[[i]]<-aliscore(alignments[[i]], gaps = "ambiguous", w = 3, path = paste0(mainDir, "/Aliscore_v.2.0"))
+        write.dna(aln_aliscored[[i]], paste0(clade, "_", "AliScore", "_Alignment","_Cluster_" ,i, ".fasta"), format="fasta")
+        plot.progress(i/length(alignments))
+        cat("\nCurated alignments are under ALISCORE folder")
 
-  n_clust<-length(list.files(path = subwd, pattern = c( "csv")))
-  species_included<-list()
-  for (i in 1:length(acce_new)){
-
-    sequence <- read.GenBank(acce_new[i])
-    Acc_spp<-names(sequence)
-    names(sequence)<-attr(sequence, "species")
-
-    for(j in 1:n_clust){
-      write.dna(sequence, "sequence.fasta", format="fasta")
-      que<-paste0("-outfmt 6 -query sequence.fasta -out test.txt -db ", subwd,files[j])
-      system2(command = 'blastn', args = que, wait=FALSE,stdout = TRUE)
-
-      if(file.info("test.txt")$size>0){
-        cluster<- read.dna( paste0(subwd,files[j]), format = "fasta")
-        cluster[length(cluster)+1]<- sequence
-        names(cluster)[length(cluster)]<-names(sequence)
-        write.dna(cluster, paste0(subwd,files[j]), format="fasta")
-        species_included[[i]] <- data.frame(Included_species=names(sequence), AN=Acc_spp,Cluster=files[j])
-        cat("*******Sequence matched!******* \n")
-        break ##If sequence is matched, we shold stop.
-      }else{
-        cat("****Still working \n")
       }
 
-    }
+    } else {}
 
-    cat("**Done with sequence", i, "of", length(acce_new), "****\n")
+  } else {}
 
-  }
-  df <- do.call("rbind", species_included)
+  setwd(mainDir)
+  cat("\nDone!!")
 
-  return(df)
 
 }
