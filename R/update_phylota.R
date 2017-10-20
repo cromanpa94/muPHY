@@ -160,6 +160,8 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     }
     df <- do.call("rbind", species_included)
 
+    if (file.exists("sequence.fasta")) unlink("sequence.fasta")
+    if (file.exists("test.txt")) unlink("test.txt")
 
     ##Do MSA--------
     ##Read fasta files
