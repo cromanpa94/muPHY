@@ -26,7 +26,7 @@ update_phylota<-function(lineage, nsamples=5){
 
   cat("Check novel species in genbank")
 
-  spp_genbank<-downstream(lineage, db = 'ncbi', downto = 'species')[[1]]
+  spp_genbank<-downstream(lineage, db = 'itis', downto = 'species')[[1]]
   spp_sampled <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv))
   spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
