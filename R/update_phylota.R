@@ -154,7 +154,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     }
     df <- do.call("rbind", species_included)
 
-    return(df)
 
     ##Do MSA--------
     ##Read fasta files
@@ -218,5 +217,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     cat("\nDone!! \\Check your WD")
 
 
-  }
+        }
+  return(df)
+
 }
