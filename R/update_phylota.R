@@ -6,22 +6,6 @@ update_phylota<-function(lineage, nsamples){
 
   get_PHYLOTA(lineage,MSA=F, ALI=F)
 
-  cat("Tranform each cluster into a Blast DB")
-
-  ##First make DB for each cluster
-  subwd<-paste0(getwd(), "/Unaligned/")
-  files<-list.files(path = subwd, pattern = c( "Cluster"))
-  files<-Filter(function(x) grepl("\\.fasta$", x), files)
-
-
-  for(i in 1:length(files)){
-    args<-paste0("-in ", subwd, files[i], " -input_type fasta -dbtype nucl")
-    system2(command = 'makeblastdb', args = args, wait=FALSE,stdout = TRUE)
-    Sys.sleep(1)
-    print(i)
-  }
-
-
   ##Check for new species in genbank
 
   cat("Check novel species in genbank")
@@ -32,6 +16,23 @@ update_phylota<-function(lineage, nsamples){
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
 
   if(length(new_spp) ==0){ cat("Nothing to add...sorry")}else{
+
+    cat("Tranform each cluster into a Blast DB")
+
+    ##First make DB for each cluster
+    subwd<-paste0(getwd(), "/Unaligned/")
+    files<-list.files(path = subwd, pattern = c( "Cluster"))
+    files<-Filter(function(x) grepl("\\.fasta$", x), files)
+
+
+    for(i in 1:length(files)){
+      args<-paste0("-in ", subwd, files[i], " -input_type fasta -dbtype nucl")
+      system2(command = 'makeblastdb', args = args, wait=FALSE,stdout = TRUE)
+      Sys.sleep(1)
+      print(i)
+    }
+
+
 
     cat(length(new_spp)," species can be added to the ", dim(spp_sampled)[1], "sampled in PhyloTa")
 
