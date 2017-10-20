@@ -2,7 +2,9 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   Clade<-lineage
   clade<-lineage
   fn <- "Unaligned"
+  fn2<-"Aligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
+  if (file.exists(fn2)) unlink(fn2,recursive =T)
 
   cat("Get PhyLota clusters \n")
 
