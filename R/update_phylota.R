@@ -188,6 +188,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       options(warn=-0)
 
       setwd(file.path(mainDir, "Aligned"))
+      setwd(mainDirect)
 
       for (i in 1: length(alignments)){
         write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
