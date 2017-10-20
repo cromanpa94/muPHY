@@ -1,4 +1,6 @@
 update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, ALI =FALSE){
+  Clade<-lineage
+  clade<-lineage
   fn <- "Unaligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
 
@@ -192,9 +194,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
       if (ALI==TRUE){
         ####For Aliscore------
-    Clade<-lineage
-    clade<-lineage
-
     setwd(mainDir)
 
         if( "Aliscore_v.2.0" %in% list.files() == FALSE){
