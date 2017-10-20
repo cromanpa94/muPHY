@@ -215,6 +215,9 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
           plot.progress(i/length(alignments))
           cat("\nCurated alignments are under ALISCORE folder \n")
 
+          setwd(mainDirect)
+
+
         }
 
       } else {}
@@ -222,6 +225,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     } else {}
 
     cat("\nDone!! \\Check your WD \n")
+    setwd(mainDirect)
 
 
         }
