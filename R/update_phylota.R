@@ -193,7 +193,9 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       if (ALI==TRUE){
         ####For Aliscore------
     Clade<-lineage
-        setwd(mainDir)
+    clade<-lineage
+
+    setwd(mainDir)
 
         if( "Aliscore_v.2.0" %in% list.files() == FALSE){
           download.file("http://www.zfmk.de/bioinformatics/Aliscore_v.2.0.zip",'Aliscore_v.2.0.zip')
