@@ -189,14 +189,12 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       dir.create(file.path(mainDir, "Aligned"))
       options(warn=-0)
 
-      setwd(file.path(mainDir, "Aligned"))
-      setwd(mainDirect)
-
       for (i in 1: length(alignments)){
         write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
       }
       cat("\nAligned and unaligned sequences are in separated folders within your working directory \n")
-
+      setwd(file.path(mainDir, "Aligned"))
+      setwd(mainDirect)
     } else {}
 
     cat("\nDone!! \\Check your WD \n")
