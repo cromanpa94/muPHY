@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5, database="ncbi"){
+update_phylota<-function(lineage, nsamples=5, database="ncbi", MSA = FALSE, ALI =FALSE){
   fn <- "Unaligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
 
@@ -151,5 +151,68 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi"){
     df <- do.call("rbind", species_included)
 
     return(df)
+
+    ##Do MSA--------
+    ##Read fasta files
+    if(MSA==TRUE){
+
+      cat("\nalignment in process. Please be patient\n")
+
+      setwd(file.path(mainDir, "unaligned"))
+
+      temp = list.files(pattern="*.fasta")
+
+      ##Chose method: "Muscle", "ClustalOmega", "ClustalW"
+
+      align_PHYLOTA<-function(file.names){
+        mySequences <- readDNAStringSet(file.names)
+        myFirstAlignment <- msa(mySequences, "ClustalOmega")
+        aln <- as.DNAbin(msaConvert(myFirstAlignment, type="phangorn::phyDat"))
+      }
+
+      alignments<-pblapply(temp,align_PHYLOTA)
+
+      options(warn=-1)
+      dir.create(file.path(mainDir, "Aligned"))
+      options(warn=-0)
+
+      setwd(file.path(mainDir, "Aligned"))
+
+      for (i in 1: length(alignments)){
+        write.dna(alignments[[i]], paste0(clade, "_", "Alignment","Cluster" ,i, ".fasta"), format="fasta")
+      }
+      cat("\nAligned and unaligned sequences are in separated folders within your working directory")
+
+      if (ALI==TRUE){
+        ####For Aliscore------
+
+        setwd(mainDir)
+
+        if( "Aliscore_v.2.0" %in% list.files() == FALSE){
+          download.file("http://www.zfmk.de/bioinformatics/Aliscore_v.2.0.zip",'Aliscore_v.2.0.zip')
+          unzip("Aliscore_v.2.0.zip")
+        } else
+          options(warn=-1)
+        dir.create(file.path(mainDir, "Aliscore"))
+        options(warn=0)
+
+        setwd(file.path(mainDir, "Aliscore"))
+
+        aln_aliscored<-list()
+        for (i in 1: length(alignments)){
+          aln_aliscored[[i]]<-aliscore(alignments[[i]], gaps = "ambiguous", w = 3, path = paste0(mainDir, "/Aliscore_v.2.0"))
+          write.dna(aln_aliscored[[i]], paste0(clade, "_", "AliScore", "_Alignment","_Cluster_" ,i, ".fasta"), format="fasta")
+          plot.progress(i/length(alignments))
+          cat("\nCurated alignments are under ALISCORE folder")
+
+        }
+
+      } else {}
+
+    } else {}
+
+    cat("\nDone!! \\Check your WD")
+
+
   }
 }
