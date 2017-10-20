@@ -5,6 +5,7 @@ update_phylota<-function(lineage, nsamples){
   cat("Get PhyLota clusters")
 
   get_PHYLOTA(lineage,MSA=F, ALI=F)
+  subwd<-paste0(getwd(), "/Unaligned/")
 
   ##Check for new species in genbank
 
@@ -15,12 +16,13 @@ update_phylota<-function(lineage, nsamples){
   spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
 
-  if(length(new_spp) ==0){ cat("Nothing to add...sorry")}else{
+  if(length(new_spp) ==0){ cat("Nothing to add...sorry")
+    if (file.exists(fn)) unlink(fn,recursive =T)
+        }else{
 
     cat("Tranform each cluster into a Blast DB")
 
     ##First make DB for each cluster
-    subwd<-paste0(getwd(), "/Unaligned/")
     files<-list.files(path = subwd, pattern = c( "Cluster"))
     files<-Filter(function(x) grepl("\\.fasta$", x), files)
 
