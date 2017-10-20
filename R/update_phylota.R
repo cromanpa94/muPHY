@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5){
+update_phylota<-function(lineage, nsamples=5, taxonomy="itis"){
   fn <- "Unaligned"
   if (file.exists(fn)) unlink(fn,recursive =T)
 
@@ -26,12 +26,12 @@ update_phylota<-function(lineage, nsamples=5){
 
   cat("Check novel species in genbank")
 
-  spp_genbank<-downstream(lineage, db = 'itis', downto = 'species')[[1]]
+  spp_genbank<-downstream(lineage, db = taxonomy, downto = 'species')[[1]]
   spp_sampled <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv))
   spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
 
-  cat(length(new_spp)," species can be added to the ", length(spp_sampled), "sampled in PhyloTa")
+  cat(length(new_spp)," species can be added to the ", dim(spp_sampled)[1], "sampled in PhyloTa")
 
   ##Check which genes do I have in PhyloTa clusters. This is based on 5 species per each cluster.
 
