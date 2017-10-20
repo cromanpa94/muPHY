@@ -18,4 +18,6 @@ Depends: taxize,
   phangorn,
   msa,
   Biostrings,
-  evobiR
+  evobiR,
+  seqinr,
+  reutils
