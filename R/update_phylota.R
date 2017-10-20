@@ -7,7 +7,9 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   cat("Get PhyLota clusters")
 
   get_PHYLOTA(lineage,MSA=F, ALI=F)
-  subwd<-paste0(getwd(), "/Unaligned/")
+  mainDirect<-getwd()
+
+  subwd<-paste0(mainDirect, "/Unaligned/")
 
   ##Check for new species in genbank
 
@@ -160,7 +162,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     ##Do MSA--------
     ##Read fasta files
 
-    mainDir <- getwd()
+    mainDir <- mainDirect
     setwd(mainDir)
 
     if(MSA==TRUE){
