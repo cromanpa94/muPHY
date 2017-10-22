@@ -1,8 +1,5 @@
 Phylo_Get_Div_Single<-function(tree=tree,data=newdata_2, e.frac=0.5){
 
-  data=b
-  brpsp<-tree$edge.length[1:length(tree$tip.label)]
-  inf<-cbind(tree$tip.label,brpsp)
   newtree<-tree
 
   newdata_3<-data

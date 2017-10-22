@@ -1,5 +1,7 @@
-Phylo_Get_Div<-function(tree2=NULL,richness_tur=NULL){
+Phylo_Get_Div<-function(tree=NULL,richness=NULL){
 
+  tree2<-tree
+  richness_tur<-richness
   ifelse(is.null(tree2$node.label)==T,
   tree2$node.label<-seq(length(tree2$tip.label)+1, (length(tree2$tip.label)+tree2$Nnode)),
   tree2$node.label)

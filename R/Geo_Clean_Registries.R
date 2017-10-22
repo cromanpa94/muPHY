@@ -1,12 +1,14 @@
-Geo_Clean_Registries<-function(name= file,ncores=6){
+Geo_Clean_Registries<-function(file=NULL, name= NULL, read=F ){
 
-
+  if(read==T){
   matrixpr <- fread(file, header=T)
   names(matrixpr)[18]<-"lon"
   names(matrixpr)[17]<-"lat"
 
   matrixpr<-matrixpr[!institutioncode=="iNaturalist",]
-  matrixpr<-matrixpr[!basisofrecord=="UNKNOWN",]
+  matrixpr<-matrixpr[!basisofrecord=="UNKNOWN",]} else{
+    matrixpr<-name
+  }
 
 
   matrixpr_2<-matrixpr[!with(matrixpr,is.na(lon)& is.na(lat)),]
