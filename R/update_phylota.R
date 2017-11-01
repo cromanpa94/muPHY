@@ -212,16 +212,16 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       setwd(mainDirect)
     } else {}
 
-    cat("\nDone!! \\Check your WD \n")
+    cat("\nDone!! \nCheck your WD \n")
     setwd(mainDirect)
 
 
         }
-  return(df)
 
   setwd(mainDirect)
+  cat("\n Retrieving accession numbers \n")
 
-  filesna<- list.files(path = subwd, pattern = c( "csv"), full.names=T)
+  filesna<- list.files(path = subwd, pattern = c( ".csv"), full.names=T)
   everyGi <- lapply(filesna,read.csv)
 
   dat_acc2<-list()
@@ -232,7 +232,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   merged.data.frame <- Reduce(function(...) merge(..., by="taxa", all=TRUE), dat_acc2)
   names(merged.data.frame)<-c("Species",paste0("cluster_", 1:(dim(merged.data.frame)[2]-1)))
   write.csv(merged.data.frame, paste0("Molecular_sampling_", lineage, ".csv"))
-  return(merged.data.frame)
+
   if (file.exists("sequence.fasta")) unlink("sequence.fasta")
   if (file.exists("test.txt")) unlink("test.txt")
 
