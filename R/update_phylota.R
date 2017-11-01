@@ -233,7 +233,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   names(merged.data.frame)<-c("Species",paste0("cluster_", 1:(dim(merged.data.frame)[2]-1)))
   write.csv(merged.data.frame, paste0("Molecular_sampling_", lineage, ".csv"))
   return(merged.data.frame)
-
   if (file.exists("sequence.fasta")) unlink("sequence.fasta")
   if (file.exists("test.txt")) unlink("test.txt")
 
