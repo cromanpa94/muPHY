@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE){
+update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, outgroup=NULL){
   Clade<-lineage
   clade<-lineage
   fn <- "Unaligned"
