@@ -119,6 +119,11 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
       data
     }
     ##Start!
+    ##
+    new_spp2<-   if(is.null(outgroup)==T){
+      new_spp
+    } else{new_spp<-c(new_spp, outgroup)   }
+
     data <- scrape.genbank(gsub("_", " ",new_spp), sampled_gene_names)
 
     ###Now, I download each sequence and test where it fits better
