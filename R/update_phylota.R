@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE){
+update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, outgroup=NULL){
   Clade<-lineage
   clade<-lineage
   fn <- "Unaligned"
@@ -6,7 +6,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   if (file.exists(fn)) unlink(fn,recursive =T)
   if (file.exists(fn2)) unlink(fn2,recursive =T)
 
-  cat("Get PhyLota clusters \n")
+  cat("\n Get PhyLota clusters \n")
 
   get_PHYLOTA(lineage,MSA=F, ALI=F)
   mainDirect<-getwd()
