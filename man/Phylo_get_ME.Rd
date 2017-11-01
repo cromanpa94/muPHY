@@ -1,7 +1,7 @@
 \name{Phylo_Get_Div}
 \alias{Phylo_Get_Div}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Phylo_Get_Div
 %%  ~~function to do ... ~~
 }
 \description{Estimate the ME diversification rates for a given tree

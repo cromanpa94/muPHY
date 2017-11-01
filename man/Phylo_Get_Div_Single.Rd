@@ -1,7 +1,7 @@
 \name{Phylo_Get_Div_Single}
 \alias{Phylo_Get_Div_Single}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Phylo_Get_Div_Single
 %%  ~~function to do ... ~~
 }
 \description{Get diversification rate for each genus in a tree using a single based on a single relative extinction fraction

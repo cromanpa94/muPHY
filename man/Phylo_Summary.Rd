@@ -1,7 +1,7 @@
 \name{Phylo_Summary}
 \alias{Phylo_Summary}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Phylo_Summary
 %%  ~~function to do ... ~~
 }
 \description{Returns the species richness per each genus in tree (based on the MRCA and on the number of species from the same genus), and systematic status (monophyletic or not)

@@ -1,7 +1,7 @@
 \name{Geo_Clean_Registries}
 \alias{Geo_Clean_Registries}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Geo_Clean_Registries
 %%  ~~function to do ... ~~
 }
 \description{Automatic curattion of geographic occurrences from a database

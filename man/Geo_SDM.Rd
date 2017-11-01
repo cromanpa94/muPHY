@@ -1,7 +1,7 @@
 \name{Geo_SDM}
 \alias{Geo_SDM}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Geo_SDM
 %%  ~~function to do ... ~~
 }
 \description{Create SDM for taxa in a dataset
