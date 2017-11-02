@@ -77,7 +77,6 @@ get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
 
 
   for (i in 1:length(seqs)){  #
-    i=1
     sequences<-ReadFasta(gsub("format=gi","format=all",seqs[i]$href))
     sequences$gi<- word(sequences$name, 1, 1, fixed("_"))
     sequences$name<- gsub(" ", "_" ,word(sequences$name, 3, 3, fixed("_")))

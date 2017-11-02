@@ -25,8 +25,8 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
 
-  if(length(new_spp) ==0){ cat("Nothing to add...sorry \n" break)
-    if (file.exists(fn)) unlink(fn,recursive =T)
+  if(length(new_spp) ==0){ cat("Nothing to add...sorry \n")
+    if (file.exists(fn)) unlink(fn,recursive =T) break
         }else{
 
     cat("Tranform each cluster into a Blast DB \n")
