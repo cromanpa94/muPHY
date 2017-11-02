@@ -11,7 +11,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
   cat("\n Get PhyLota clusters \n")
 
-  get_PHYLOTA(lineage,MSA=F, ALI=F)
+  muPhy::get_PHYLOTA(lineage,MSA=F, ALI=F)
   mainDirect<-getwd()
 
   subwd<-paste0(mainDirect, "/Unaligned/")
