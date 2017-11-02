@@ -1,6 +1,6 @@
 get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
 
-
+clade="Cylindraspis"
   list.of.packages <- c("ips")
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
@@ -79,14 +79,15 @@ get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
 
 
   for (i in 1:length(seqs)){  #
+    i=1
     sequences<-ReadFasta(gsub("format=gi","format=all",seqs[i]$href))
     sequences$gi<- word(sequences$name, 1, 1, fixed("_"))
     sequences$name<- gsub(" ", "_" ,word(sequences$name, 3, 3, fixed("_")))
 
     summary_unique_sequences<-sequences[!duplicated(sequences$name), ]
-    summary_non_sp<-summary_unique_sequences[- grep("sp.", summary_unique_sequences$name) , ]
+    summary_non_sp<-summary_unique_sequences[- grep("_sp.", summary_unique_sequences$name) , ]
 
-    if(length(grep("sp.", summary_unique_sequences$name))== 0) {
+    if(length(grep("_sp.", summary_unique_sequences$name))== 0) {
       seqRFLP::write.fasta(dataframe2fas(summary_unique_sequences[c("name","sequence")]), file=paste0(clade, "_","Cluster" ,i, ".fasta"))
       write.csv(summary_unique_sequences[c("name","gi")],
                 file=paste0(clade, "_","Cluster" ,i, ".csv") )
