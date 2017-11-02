@@ -1,4 +1,4 @@
-update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, outgroup=NULL){
+update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA = FALSE, outgroup=NULL, correct_db=TRUE, delete_all=TRUE){
   ##New version
   options(warn=-1)
 
@@ -6,8 +6,12 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   clade<-lineage
   fn <- "Unaligned"
   fn2<-"Aligned"
+  fn3<-"phylota.sampling.csv"
+  fn4<-"included.species.csv"
   if (file.exists(fn)) unlink(fn,recursive =T)
   if (file.exists(fn2)) unlink(fn2,recursive =T)
+  if (file.exists(fn3)) unlink(fn3,recursive =T)
+  if (file.exists(fn4)) unlink(fn4,recursive =T)
 
   cat("\n Get PhyLota clusters \n")
 
@@ -25,8 +29,9 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   spp_sampled <-spp_sampled[!duplicated(spp_sampled$name),]
   new_spp<-setdiff(gsub(" ", "_", spp_genbank$childtaxa_name), spp_sampled$name)
 
-  if(length(new_spp) ==0){ cat("Nothing to add...sorry \n")
-    if (file.exists(fn)) unlink(fn,recursive =T) break
+  if(length(new_spp) ==0){
+    if (file.exists(fn)) unlink(fn,recursive =T);
+    stop("Nothing to be added")
         }else{
 
     cat("Tranform each cluster into a Blast DB \n")
@@ -129,17 +134,19 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
     data <- scrape.genbank(gsub("_", " ",new_spp), sampled_gene_names)
 
+
+
     ###Now, I download each sequence and test where it fits better
 
     cat("\nFitting the new sequences into the existing clusters \n")
 
     acce_new<-as.character(na.omit(unlist(data[,-1])))
 
+    if(length(acce_new) == 0){ stop("No sequences were found")}
 
     n_clust<-length(list.files(path = subwd, pattern = c( "csv")))
     species_included<-list()
     for (i in 1:length(acce_new)){
-
       sequence <- read.GenBank(acce_new[i])
       Acc_spp<-names(sequence)
       names(sequence)<-attr(sequence, "species")
@@ -154,7 +161,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
           cluster[length(cluster)+1]<- sequence
           names(cluster)[length(cluster)]<-names(sequence)
           write.dna(cluster, paste0(subwd,files[j]), format="fasta")
-          species_included[[i]] <- data.frame(Included_species=names(sequence), AN=Acc_spp,Cluster=files[j])
+           species_included[[i]] <- data.frame(Included_species=names(sequence), AN=Acc_spp,Cluster=files[j])
           cat("*******Sequence matched!******* \n")
           break ##If sequence is matched, we shold stop.
         }else{
@@ -217,6 +224,8 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   cat("\n Retrieving accession numbers \n")
 
   filesna<- list.files(path = subwd, pattern = c( ".csv"), full.names=T)
+  filesna2<- list.files(path = subwd, pattern = c( ".csv"))
+
   everyGi <- lapply(filesna,read.csv)
 
   dat_acc2<-list()
@@ -225,21 +234,59 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     dat_acc2[[m]] <- cbind.data.frame(taxa= dat_acc$taxon ,dat_acc$acc_no)
   }
   merged.data.frame <- Reduce(function(...) merge(..., by="taxa", all=TRUE), dat_acc2)
-  names(merged.data.frame)<-c("Species",paste0("cluster_", 1:(dim(merged.data.frame)[2]-1)))
+  names(merged.data.frame)<-c("Species",filesna2)
   write.csv(merged.data.frame, paste0("Molecular_sampling_", lineage, ".csv"))
 
   if (file.exists("sequence.fasta")) unlink("sequence.fasta")
   if (file.exists("test.txt")) unlink("test.txt")
   if (file.exists("Test.csv")) unlink("Test.csv")
-  options(warn=0)
 
   ##Checking taxonomy
-  ##
 
+  if(correct_db==T){
 
- species<- read.csv(paste0("Molecular_sampling_", lineage, ".csv"))
+    speciesbdb<- read.csv(paste0("Molecular_sampling_", lineage, ".csv"))
 
+    del<-c()
+    for(i in 1:dim(speciesbdb)[1]){
+      del[i] <- if(gnr_resolve(names = as.character(speciesbdb[i,2]))[1,"score"]<0.98) "delete" else "Ok"
+      cat("Checking species", i, "of", dim(speciesbdb)[1], "\n")
+    }
 
+    sp_names<-strsplit(as.character(speciesbdb[,2]), " ")
 
+    del2<-c()
+    for(i in 1:length(sp_names)){
+      del2[i]<- if( length(sp_names[[i]])>2)"Delete" else "Ok"
+    }
 
-}
+    spp_delete<-as.character(speciesbdb[,2])[which(del=="Delete" | del2=="Delete")]
+
+    ##Correct DB
+    corrected.db<-speciesbdb[!speciesbdb$Species %in% spp_delete,]
+    ##Correct clusters
+    for(i in 1:length(files)){
+      cluster<- read.dna( paste0(subwd,files[i]), format = "fasta")
+      newclu<-if(length(which(names(cluster) %in% gsub(" ", "_",spp_delete)))==0){cluster}else{
+        cluster[-which(names(cluster) %in% gsub(" ", "_",spp_delete))]}
+      setwd(file.path(mainDir, "unaligned"))
+      if(length(names(newclu))==0){write.table(c("Cluster", i, "skipped"), paste0("No_cluster_",files[i])); next}else{
+        write.dna(newclu, paste0("corrected_",files[i]), format="fasta")
+      }
+
+    }
+  }else{cat("Done!")}
+
+  setwd(mainDir)
+  write.csv(df, "included.species.csv")
+  write.csv(corrected.db, "phylota.sampling.csv")
+  if (file.exists(paste0("Molecular_sampling_", lineage, ".csv"))) unlink(paste0("Molecular_sampling_", lineage, ".csv"))
+
+  if(delete_all==T){
+  do.call(file.remove, list(setdiff(list(list.files(subwd, full.names = TRUE))[[1]],grep("corrected" ,list(list.files(subwd, full.names = TRUE))[[1]], value = T ))))
+  }else{cat("Done")}
+
+  ##Take both CSV and create a single summary file
+
+  options(warn=0)
+  }
