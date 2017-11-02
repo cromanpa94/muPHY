@@ -12,6 +12,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   if (file.exists(fn2)) unlink(fn2,recursive =T)
   if (file.exists(fn3)) unlink(fn3,recursive =T)
   if (file.exists(fn4)) unlink(fn4,recursive =T)
+  if (file.exists(grep("Molecular_*", list.files("."), value = T )[[1]] )) unlink( grep("Molecular_*", list.files("."), value = T )[[1]]  )
 
   cat("\n Get PhyLota clusters \n")
 
@@ -22,7 +23,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
   ##Check for new species in genbank
 
-  cat("Check novel species in genbank \n")
+  cat("Checking for novel species in genbank \n")
 
   spp_genbank<-downstream(lineage, db = database, downto = 'species')[[1]]
   spp_sampled <- do.call(rbind,lapply(list.files(path = subwd, pattern = c( "csv"), full.names=T),read.csv))
@@ -34,7 +35,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     stop("Nothing to be added")
         }else{
 
-    cat("Tranform each cluster into a Blast DB \n")
+    cat("Tranforming each cluster into a Blast DB \n")
 
     ##First make DB for each cluster
     files<-list.files(path = subwd, pattern = c( "Cluster"))
@@ -58,7 +59,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     sampled_genes<-ncbi_byid(gsub("gi","",as.vector(sample_Gi$gi)))
 
     sampled_gene_names<- if(is.null(genes) == T){
-      cat("Lets look for the genes that were sampled in PhyLota \n")
+      cat("Looking for genes sampled in PhyLota \n")
       choosebank("genbank")
       gene_fin<-list()
       for(i in 1:length(sampled_genes$acc_no)){
@@ -280,13 +281,37 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   setwd(mainDir)
   write.csv(df, "included.species.csv")
   write.csv(corrected.db, "phylota.sampling.csv")
-  if (file.exists(paste0("Molecular_sampling_", lineage, ".csv"))) unlink(paste0("Molecular_sampling_", lineage, ".csv"))
+  if (file.exists(grep("Molecular_*", list.files("."), value = T )[[1]] )) unlink( grep("Molecular_*", list.files("."), value = T )[[1]]  )
 
   if(delete_all==T){
   do.call(file.remove, list(setdiff(list(list.files(subwd, full.names = TRUE))[[1]],grep("corrected" ,list(list.files(subwd, full.names = TRUE))[[1]], value = T ))))
   }else{cat("Done")}
 
-  ##Take both CSV and create a single summary file
+  ##
+
+  cat("Creating a summary file of your molecular sampling")
+
+  db1<-read.csv("included.species.csv")
+  db2<-read.csv("phylota.sampling.csv")
+  db3<-db2[,-c(1:2)]
+
+  for (i in 1:dim(db1)[1]){
+    a<- unlist(regmatches(as.character(db1[i,"Cluster"]), gregexpr("[[:digit:]]+", as.character(db1[i,"Cluster"]))))
+    b<- unlist(regmatches(names(db3)[-c(1)], gregexpr("[[:digit:]]+", names(db3)[-c(1)])))
+
+    to_add<-NULL
+    to_add<-  rep(NA, dim(db3)[2])
+    to_add[1]<-as.character(db1$Included_species)[i]
+    to_add[which(a==b)+1]<-as.character(db1$AN)[i]
+
+    db3<-data.frame(rbind(as.matrix(db3), t(as.matrix(to_add))))
+    print(i)
+  }
+
+
+  write.csv(db3, paste0("Molecular_sampling_", lineage, ".csv"))
+  #if (file.exists(fn3)) unlink(fn3,recursive =T)
+  #if (file.exists(fn4)) unlink(fn4,recursive =T)
 
   options(warn=0)
   }
