@@ -172,13 +172,6 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
     if (file.exists("test.txt")) unlink("test.txt")
 
 
-   filesna<- list.files(path = subwd, pattern = c( "csv"), full.names=T)
-   everyGi <- lapply(filesna,read.csv)
-
-  # for (m in 1:length(filesna)){
-  #   write.csv(ncbi_byid(gsub("gi","",as.vector(everyGi[[m]]$gi))), "Test.csv")
-  #   }
-
     ##Do MSA--------
     ##Read fasta files
 
