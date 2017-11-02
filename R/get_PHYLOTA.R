@@ -1,6 +1,5 @@
 get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
 
-  clade="Cylindraspis"
 
   list.of.packages <- c("ips")
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
