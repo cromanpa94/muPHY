@@ -315,5 +315,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
 
   cat("Please go over the molecular sampling file carefully")
 
+  ##Use Taxize to check again the species names and drop those that are no longer valid
+
   options(warn=0)
   }
