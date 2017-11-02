@@ -1,5 +1,7 @@
 get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
 
+  clade="Cylindraspis"
+
   list.of.packages <- c("ips")
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
@@ -17,6 +19,7 @@ get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
   links <- xpathSApply(doc, "//a/@href")
   clusters<-grep("getcluster",links, value=T )
 
+  clusters<-clusters[grep(ti,clusters)]
 
   ##Sub-websites containing the different sequences
 
