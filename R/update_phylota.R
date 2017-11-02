@@ -313,5 +313,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   #if (file.exists(fn3)) unlink(fn3,recursive =T)
   #if (file.exists(fn4)) unlink(fn4,recursive =T)
 
+  cat("Please go over the molecular sampling file carefully")
+
   options(warn=0)
   }
