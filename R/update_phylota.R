@@ -12,7 +12,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   if (file.exists(fn2)) unlink(fn2,recursive =T)
   if (file.exists(fn3)) unlink(fn3,recursive =T)
   if (file.exists(fn4)) unlink(fn4,recursive =T)
-  if (file.exists(grep("Molecular_*", list.files("."), value = T ))) unlink( grep("Molecular_*", list.files("."), value = T ) )
+  #if (file.exists(grep("Molecular_*", list.files("."), value = T ))) unlink( grep("Molecular_*", list.files("."), value = T ) )
 
   cat("\n Get PhyLota clusters \n")
 
