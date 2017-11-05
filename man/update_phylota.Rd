@@ -4,7 +4,17 @@
 \title{Update phylota clusters
 %%  ~~function to do ... ~~
 }
-\description{This function updates phylota clusters using sequences from genbank. It overwrites the clusters that are download. I've used it only on mac. Make sure that blast is installed.
+\description{This function updates phylota clusters using sequences from genbank. It overwrites the clusters that are download. I've used it only on mac.
+
+******Make sure to have blast installed in your computer (also in your path)*******
+
+For windows users: Follow the steps outlined in the following link.
+
+http://dmcase.blogspot.com.br/2014/02/how-to-install-blast-on-windows.html
+
+Don't forget to set the path!
+
+
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
