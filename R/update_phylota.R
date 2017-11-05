@@ -67,6 +67,8 @@ update_phylota <-
       files <- Filter(function(x)
         grepl("\\.fasta$", x), files)
 
+  subwd<- if(Sys.info()[['sysname']]=="Windows") {
+      gsub("\\", "/", subwd, fixed=T) } else {subwd}
 
       for (i in 1:length(files)) {
         args <-
@@ -238,7 +240,7 @@ update_phylota <-
               )
             cat("*******Sequence matched!******* \n")
             break ##If sequence is matched, we shold stop.
-          } else{
+          } else {
             cat("****Still working \n")
           }
 
