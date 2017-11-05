@@ -12,7 +12,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   if (file.exists(fn2)) unlink(fn2,recursive =T)
   if (file.exists(fn3)) unlink(fn3,recursive =T)
   if (file.exists(fn4)) unlink(fn4,recursive =T)
-  if (file.exists(grep("Molecular_*", list.files("."), value = T )[[1]] )) unlink( grep("Molecular_*", list.files("."), value = T )[[1]]  )
+  if (file.exists(grep("Molecular_*", list.files("."), value = T ))) unlink( grep("Molecular_*", list.files("."), value = T ) )
 
   cat("\n Get PhyLota clusters \n")
 
@@ -281,7 +281,7 @@ update_phylota<-function(lineage, nsamples=5, database="ncbi", genes=NULL, MSA =
   setwd(mainDir)
   write.csv(df, "included.species.csv")
   write.csv(corrected.db, "phylota.sampling.csv")
-  if (file.exists(grep("Molecular_*", list.files("."), value = T )[[1]] )) unlink( grep("Molecular_*", list.files("."), value = T )[[1]]  )
+  if (file.exists(grep("Molecular_*", list.files("."), value = T ))) unlink( grep("Molecular_*", list.files("."), value = T ) )
 
   if(delete_all==T){
   do.call(file.remove, list(setdiff(list(list.files(subwd, full.names = TRUE))[[1]],grep("corrected" ,list(list.files(subwd, full.names = TRUE))[[1]], value = T ))))
