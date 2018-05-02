@@ -4,11 +4,11 @@
 \title{Run PartitionFinder 1 from R
 %%  ~~function to do ... ~~
 }
-\description{Only set the name of the folder within your Working directory that contains a set of fasta files (msa) and run the code. You can also use the output from get_PHYLOTA function.
+\description{Need to set the name of the folder within your Working directory that contains a set of fasta files (i.e., only MSA are allowed).
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-run_PF(folder = "WD")
+run_PF(folder = "ALI")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,9 +16,7 @@ run_PF(folder = "WD")
 %%     ~~Describe \code{folder} here~~
 
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{
 \item{folder}{"ALI"}
 }
@@ -28,17 +26,11 @@ Lanfear, R., Calcott, B., Ho, S. Y., & Guindon, S. (2012). PartitionFinder: comb
 }
 \author{
 Cristian Roman-Palacios}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-run_PF(folder = "WD")
+\dontrun{
+
+ run_PF(folder = "ALI")
+ }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

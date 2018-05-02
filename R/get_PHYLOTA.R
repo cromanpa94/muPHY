@@ -1,12 +1,9 @@
-get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
-  list.of.packages <- c("ips")
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-  if(length(new.packages)) install.packages(new.packages)
-  require(ips)
+get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE, c_directory=FALSE){
+
   cat("Starting...")
 
   ##GetWD
-  mainDir <- getwd()
+  mainDir <- ifelse(c_directory == FALSE, tempdir() , getwd())
   setwd(mainDir)
   ti<-get_uid(sciname = clade)[1]
 
@@ -146,9 +143,10 @@ get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
       setwd(mainDir)
 
       if( "Aliscore_v.2.0" %in% list.files() == FALSE){
-      download.file("https://mega.nz/#!pg0m2QbA!o__7ex6_iK-5vSMqPhTUAhVjSFn5sYRbhHXP56j4RIM",'Aliscore_v.2.0.zip')
-      unzip("Aliscore_v.2.0.zip")
-      } else
+      download.file("http://software.zfmk.de/ALISCORE_v2.0.zip",'Aliscore_v.2.0.zip')
+        unzip("Aliscore_v.2.0.zip")
+        unzip("ALISCORE_v2.0/Aliscore_v.2.0.zip")
+        } else
       options(warn=-1)
       dir.create(file.path(mainDir, "Aliscore"))
       options(warn=0)

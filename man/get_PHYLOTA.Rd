@@ -14,26 +14,22 @@ I suggest using SuperMatrix function (evobioR package) to concatenate MSAs.
 
 }
 \usage{
-get_PHYLOTA(clade,MSA=FALSE, ALI=FALSE)
+get_PHYLOTA(clade,MSA=FALSE, ALI=FALSE, c_directory=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{clade}{String: Lineage name (e.g. "Sphyraena")}
   \item{MSA}{Logical: Perform a MSA on the clusters (only ClustalOmega available)}
   \item{ALI}{Logical: Run Aliscore on the MSA}
+  \item{c_directory}{Logical: Should the function work in your current working directory?}
+
 %%     ~~Describe \code{x} here~~
 }
 
 \details{Please select a single clade. No
 %%  ~~ If necessary, more details than the description above ~~
 }
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
+
 \references{
 
 Sanderson, M. J., Boss, D., Chen, D., Cranston, K. A., & Wehe, A. (2008). The PhyLoTA Browser: processing GenBank for molecular phylogenetics research. Systematic Biology, 57(3), 335-346.
@@ -46,15 +42,8 @@ Sievers, F., & Higgins, D. G. (2014). Clustal Omega, accurate alignment of very 
 \author{Cristian Roman-Palacios
 %%  ~~who you are~~
 }
-\note{Make sure R is updated
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
-get_PHYLOTA("Sphyraena", MSA=TRUE, ALI=TRUE)
+\dontrun{
+ get_PHYLOTA("Sphyraena", MSA=TRUE, ALI=TRUE, c_directory=T)
+ }
 }
