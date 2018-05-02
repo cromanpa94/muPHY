@@ -4,16 +4,21 @@
 \title{Update phylota clusters
 %%  ~~function to do ... ~~
 }
-\description{This function updates phylota clusters using sequences from genbank. It overwrites the clusters that are download. I've used it only on mac.
+\description{This function updates a set of phylota clusters using sequences from genbank.
 
-******Make sure to have blast installed in your computer (also in your path)*******
-
-For windows users: Follow the steps outlined in the following link.
+Make sure to have blast installed in your computer (also in your path). For windows users follow the steps outlined in the following link:
 
 http://dmcase.blogspot.com.br/2014/02/how-to-install-blast-on-windows.html
 
-Don't forget to set the path!
+Instructions for MAC users:
 
+https://gist.github.com/knmkr/5393474
+
+In short, this function first download all the available orthologous clusters for a given lineage. Then, it looks for non-overlapping species between the sampled (i.e., PhyloTa) and newly published sequences (i.e., genbank). This function also allows the inclussion of outgroup species.
+
+Each new sequence is then blastes agains each orthologous cluster and merged when a significant match is found. Next, taxonomy is corrected and sampling summaries are exported.
+
+Additional arguments are provided for users interested in performing multiple sequence alignment or using aliscore.
 
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
@@ -22,12 +27,20 @@ update_phylota(lineage, nsamples)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{lineage}{Character: A given lineage (e.g. "Sphyraena")}
-  \item{nsamples}{numeric: Number of species sampled from clusters and used to obtain gene symbols}
+  \item{lineage}{String: A given lineage (e.g. "Sphyraena")}
+  \item{nsamples}{numeric: If sequence names are not provided, type the number of sequences to be used when assesing the sequence identity (i.e., more sequence will take more time to process, but the likelihood of ID is higher. I suggest using at least 5)}
+  \item{database}{String: Taxonomic database. See Taxize for further details}
+  \item{genes}{String: Which genes should the pipeline look for? Use either previous studies or look at PhyloTa database}
+  \item{MSA}{Logical: Align sequences?}
+  \item{ALI}{Logical: Run AliScore?}
+  \item{outgroup}{String: A vector of strings containing the names of outgroup species}
+  \item{correct_db}{Logical: Whether an additional correction step is conducted after the new sequences are included. Subspecies and sp. are removed from the resulting files}
+  \item{delete_all}{Logical: Delete all intermediate files}
+
 %%     ~~Describe \code{x} here~~
 }
 
-\details{Use a single clade.
+\details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
@@ -54,5 +67,10 @@ Sanderson, M. J., Boss, D., Chen, D., Cranston, K. A., & Wehe, A. (2008). The Ph
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-get_PHYLOTA("Sphyraena", MSA=TRUE, ALI=TRUE)
+
+update_phylota(lineage = "Centrolene", genes=c("COI","CytB", "ND4","COX","D-loop" ,"Cmos","BDNF","RPS14","18S","28S", "RAG1", "16S", "12S","POMC","c-myc"),
+                      outgroup = c("Rhinella marina", "Leptodactylus fragilis"))
+
+
+
 }

@@ -1,14 +1,17 @@
-Package: muPhy
+Package: rPhyloTa
 Type: Package
-Title: Multiple utilities for performing Phylogenetic analyses
-Version: 0.1.0
-Author: Cristian Roman-Palacios
+Title: Update Phylota Clusters
+Version: 0.1.2
+Author: Cristian Roman-Palacios [aut, cre, cph]
 Maintainer: Cristian Roman-Palacios <cromanpa94@email.arizona.edu>
-Description: Multiple utilities.
+Authors@R: person("Cristian", "Roman-Palacios", email = "cromanpa94@email.arizona.edu",
+                  role = c("aut", "cre","cph"))
+Description: Includes functions to update phylota othologous clusters (Sanderson et al. 2008; <doi:10.1080/10635150802158688>), and run partitionfinder (Lanfear et al. 2012; <doi:10.1093/molbev/mss020>). This library downloads all orthologous clusters for a set of taxa, finds new available sequences in GenBank, and includes the same into PhyloTa clusters using local BLAST algorithms. Outgroup species can be also included in orthologous clusters through rPhyloTa (not allowed in Phylota). Species-level taxonomy is updated using functions from Taxize. Furthermore, the user can choose the output type of orthologous clusters (unaligned, aligned, or aligned and masked), and directly run PartitionFinder on a set of sequences (either orthologous clusters or others) if needed. 
+Copyright: No copyright infringement intended for the functions and packages requiered by rPhyloTa.  
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: taxize,
+Imports: taxize,
   pbapply,
   seqRFLP,
   RCurl,
@@ -21,4 +24,7 @@ Depends: taxize,
   evobiR,
   seqinr,
   reutils,
-  traits
+  traits,
+  ips,
+  here,
+  reshape2

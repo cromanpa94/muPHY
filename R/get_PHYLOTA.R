@@ -146,7 +146,7 @@ get_PHYLOTA<-function(clade, MSA = FALSE, ALI =FALSE){
       setwd(mainDir)
 
       if( "Aliscore_v.2.0" %in% list.files() == FALSE){
-      download.file("http://www.zfmk.de/bioinformatics/Aliscore_v.2.0.zip",'Aliscore_v.2.0.zip')
+      download.file("https://mega.nz/#!pg0m2QbA!o__7ex6_iK-5vSMqPhTUAhVjSFn5sYRbhHXP56j4RIM",'Aliscore_v.2.0.zip')
       unzip("Aliscore_v.2.0.zip")
       } else
       options(warn=-1)

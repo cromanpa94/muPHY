@@ -1,7 +1,7 @@
 \name{run_PF}
 \alias{run_PF}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Use PartitionFinder 1 from R
+\title{Run PartitionFinder 1 from R
 %%  ~~function to do ... ~~
 }
 \description{Only set the name of the folder within your Working directory that contains a set of fasta files (msa) and run the code. You can also use the output from get_PHYLOTA function.
@@ -38,7 +38,7 @@ Cristian Roman-Palacios}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-
+run_PF(folder = "WD")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

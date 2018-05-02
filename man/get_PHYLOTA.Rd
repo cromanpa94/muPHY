@@ -4,23 +4,27 @@
 \title{Download PHYLOTA clusters
 %%  ~~function to do ... ~~
 }
-\description{A function for retrieving PHYLOTA clusters for a given clade. Make sure that there are
-informative clusters in the website. Otherwise it will not work. This function (1) creates a new folder in
-your working directory, and (2) exports each cluster in fasta format.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+\description{This function retrieves all PHYLOTA clusters for a given clade. Make sure that there are
+informative clusters in the database. Otherwise it will not work. This function (1) creates a new folder in
+your working directory, and (2) saves each cluster into a fasta format file.
+
+Two additional arguments were included into the function to (1) perform multiple sequence alignment of each orthologous cluster and (2) run aliscore on the same set.
+
+I suggest using SuperMatrix function (evobioR package) to concatenate MSAs.
+
 }
 \usage{
-get_PHYLOTA(clade,MSA=TRUE, ALI=TRUE)
+get_PHYLOTA(clade,MSA=FALSE, ALI=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{clade}{Character: A given lineage (e.g. "Sphyraena")}
-  \item{MSA}{Logical: Perform a MSA on the clusters (only ClustalOmega)}
-  \item{ALI}{Logical: Use Aliscore on the MSA}
+  \item{clade}{String: Lineage name (e.g. "Sphyraena")}
+  \item{MSA}{Logical: Perform a MSA on the clusters (only ClustalOmega available)}
+  \item{ALI}{Logical: Run Aliscore on the MSA}
 %%     ~~Describe \code{x} here~~
 }
 
-\details{Use a single clade.
+\details{Please select a single clade. No
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
@@ -31,13 +35,18 @@ get_PHYLOTA(clade,MSA=TRUE, ALI=TRUE)
 %% ...
 }
 \references{
+
 Sanderson, M. J., Boss, D., Chen, D., Cranston, K. A., & Wehe, A. (2008). The PhyLoTA Browser: processing GenBank for molecular phylogenetics research. Systematic Biology, 57(3), 335-346.
+
+Misof, B., & Misof, K. (2009). A Monte Carlo approach successfully identifies randomness in multiple sequence alignments: a more objective means of data exclusion. Systematic biology, 58(1), 21-34.
+
+Sievers, F., & Higgins, D. G. (2014). Clustal Omega, accurate alignment of very large numbers of sequences. Multiple sequence alignment methods, 105-116.
 %% ~put references to the literature/web site here ~
 }
 \author{Cristian Roman-Palacios
 %%  ~~who you are~~
 }
-\note{Make sure you have the lastest version of R
+\note{Make sure R is updated
 %%  ~~further notes~~
 }
 
