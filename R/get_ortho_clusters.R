@@ -1,4 +1,4 @@
-get_ortho_clusters<-function(lineage, outgroup, MSA){
+get_ortho_clusters<-function(ingroup, outgroup, MSA){
 
   ##Delete files
   if(file.exists("sequences.fasta")){unlink("sequences.fasta", recursive = T)}else{}
@@ -8,7 +8,7 @@ get_ortho_clusters<-function(lineage, outgroup, MSA){
   }
 
 
-  taxa<-c(lineage, outgroup)
+  taxa<-c(ingroup, outgroup)
 
 
   lapply(1:length(taxa), function(x){
