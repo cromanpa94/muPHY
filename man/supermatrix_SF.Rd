@@ -6,6 +6,9 @@
 }
 \description{This concatenates fasta files based on a given threshold. It read all fasta files within the working directory that matches matching a given pattern (e.g. Cluster)
 
+
+NOTE: THIS FUNCTION WAS DIRECTLY MODIFIED FROM evobiR PACKAGE! I'M NOT THE ORIGINAL AUTHOR (ASK HEATH BLACKMON FOR FURTHER DETAILS).
+
 }
 \usage{
 supermatrix_SF(threshold, pattern)
