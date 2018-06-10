@@ -1,4 +1,4 @@
-supermatrix_SF<-function (missing = "-", prefix = "concatenated", save = T, threshold=NULL,
+supermatrix_SF<-function (missing = "-", prefix = "concatenated", save = T, threshold=0,
                         pattern="Cluster") {
 
   if(is.null(threshold)){
