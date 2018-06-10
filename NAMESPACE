@@ -21,5 +21,8 @@ import("traits")
 import("ips", except=c(read.phy))
 import("here")
 import("reshape2")
+import("rentrez")
+import("MKmisc")
+import("RFLPtools")
 
 
