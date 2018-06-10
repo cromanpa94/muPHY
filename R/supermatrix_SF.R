@@ -68,9 +68,9 @@ supermatrix_SF<-function (missing = "-", prefix = "concatenated", save = T, thre
   results[[2]] <- seqmatrix
   if (save == T) {
     print("saving files")
-    write.dna(seqmatrix, file = paste(prefix, ".fasta",
+    write.dna(seqmatrix, file = paste(prefix, threshold,".fasta",
                                       sep = ""), format = "f")
-    write.csv(partitions, row.names = F, file = paste(prefix,
+    write.csv(partitions, row.names = F, file = paste(prefix,threshold,
                                                       ".partitions.csv", sep = ""))
   }
   return(results)
