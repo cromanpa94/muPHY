@@ -10,6 +10,7 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
 
   taxa<-c(ingroup, outgroup)
 
+  cat("Downloading sequences")
 
   lapply(1:length(taxa), function(x){
     tr<-entrez_search(db="nuccore", term= paste0(taxa[x], "[ORGN]"), use_history=TRUE)
@@ -24,10 +25,16 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
 
   seqs<- read.dna("sequences.fasta", "fasta")
 
+  cat("Removing sequences for unconfirmed species")
+
+
   seqs<- seqs[! duplicated(names(seqs)) ]
-  seqs<- seqs[- grep("sp.|cf.|aff.", names(seqs) ) ]
+  seqs<- seqs[- grep("sp.|cf.|aff.|UNVERIFIED:", names(seqs) ) ]
 
   write.dna(seqs, "sequences.fasta", format = "fasta")
+
+  cat("Blasting sequences")
+
 
   args <-
     paste0("-in ", getwd(), "/sequences.fasta", " -input_type fasta -dbtype nucl")
@@ -59,6 +66,7 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
   hc2 <- cutree(hc, h=0.999999)
 
   ##Write clusters
+  cat(length(unique(hc2)), "clusters found")
 
   seqs<- read.dna("sequences.fasta", "fasta")
   lapply(1:length(unique(hc2)), function(x){
@@ -104,6 +112,7 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
     }
 
     temp = list.files(path = "Aligned/",pattern="*.fasta", full.names = T)
+    temp<-temp[order(nchar(temp), temp)]
 
     fst<- lapply(temp, read.dna, format = "f")
 
@@ -121,6 +130,7 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
   ##Sampling df
   temp = list.files(pattern="*.fasta")
   temp<-temp[grep("cluster", temp)]
+  temp<-temp[order(nchar(temp), temp)]
 
   fst<- lapply(temp, read.dna, format = "f")
 
@@ -131,4 +141,6 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
   }))
 
   write.csv(dfs, "Sampling.csv")
+  cat("Done")
+
 }
