@@ -15,7 +15,7 @@ get_ortho_clusters<-function(ingroup, outgroup, MSA){
     tr<-entrez_search(db="nuccore", term= paste0(taxa[x], "[ORGN]"), use_history=TRUE)
     for( seq_start in seq(1,tr$count,tr$count/10)){
       recs <- entrez_fetch(db="nuccore", web_history=tr$web_history,
-                           rettype="fasta", retmax=50, retstart=seq_start)
+                           rettype="fasta", retstart=seq_start)
       cat(recs, file="sequences.fasta", append=TRUE)
       cat(round(seq_start+49), "sequences downloaded\r")
     }
