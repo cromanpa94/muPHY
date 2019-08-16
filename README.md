@@ -8,6 +8,6 @@ SUPERCRUNCH: https://github.com/dportik/SuperCRUNCH
 PHYLOTAR: https://github.com/ropensci/phylotaR
 
 
-```library(devtools)
+```library(devtools)```
 
-install_github("cromanpa94/rPHYLOTA")```
+```install_github("cromanpa94/rPHYLOTA")```
