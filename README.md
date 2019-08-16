@@ -1,6 +1,6 @@
 # myPHY
 Multiple utilities for phylogenetic analyses
 
-library(devtools)
+´library(devtools)´
 
-install_github("cromanpa94/muPHY")
+´install_github("cromanpa94/muPHY")
